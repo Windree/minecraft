@@ -1,0 +1,63 @@
+#!/bin/bash
+set -eufo pipefail
+#https://gist.github.com/vivien/3b1c2efb80f3f3dde001
+
+SERVER=wings.keenetic.link
+PORT=6667
+USERNAME="$1"
+CHAN="#$2"
+INPUT=`mktemp -u --suffix .in`
+OUTPUT=`mktemp -u --suffix .OUT`
+connect_pid=
+ping_pid=
+mkfifo $INPUT
+mkfifo $OUTPUT
+	
+irc_ping(){
+	while read irc_ping_line; do
+		case $irc_ping_line in 
+			PING* ) 
+				echo "$irc_ping_line" | sed "s/PING/PONG/"
+			;;
+		esac
+	done
+}
+
+login(){
+	echo "USER $1 * * : $1"
+	echo "NICK $1"
+}
+
+join(){
+	echo "JOIN $1"
+}
+
+message(){
+	echo "PRIVMSG $1 : $2"
+}
+
+cleanup(){
+	rm -vf $INPUT $OUTPUT
+	test "$connect_pid" && kill -0 $connect_pid > /dev/null && kill -9 $connect_pid
+	test "$ping_pid"    && kill -0 $ping_pid > /dev/null    && kill -9 $ping_pid
+	test -e $INPUT && rm -f $INPUT
+	test -e $OUTPUT && rm -f $OUTPUT
+}
+
+trap cleanup exit
+USER_SEQ=0
+irc_ping <$OUTPUT >$INPUT &
+ping_pid=$!
+
+while read line; do
+	test "$connect_pid" && lsof -i :$PORT -sTCP:ESTABLISHED -a -p $connect_pid > /dev/null || {
+		test "$connect_pid" && kill -9 $connect_pid
+		((USER_SEQ+=1))
+		USER=$USERNAME$USER_SEQ
+		nc $SERVER $PORT <$INPUT >$OUTPUT &
+		connect_pid=$!
+		login $USER > $INPUT
+		join $CHAN > $INPUT
+	}
+	message  $CHAN "$line" > $INPUT
+done
