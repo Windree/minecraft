@@ -1,10 +1,10 @@
-FROM ubuntu:disco
+FROM ubuntu:18.10
 ARG DEBIAN_FRONTEND=noninteractive
 ARG BUILDTOOLS_URL="https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
 ARG BUILDTOOLS_GIT="https://hub.spigotmc.org/stash/scm/spigot/buildtools.git"
 ARG SPIGOT_GIT="https://hub.spigotmc.org/stash/scm/spigot/spigot.git"
 RUN apt update && \
-    apt install -y openjdk-11-jre-headless curl wget git lsof netcat-openbsd && \
+    apt install -y openjdk-11-jre-headless curl wget git lsof netcat-openbsd lsof && \
     cd /tmp && \
     curl -o build.jar "$BUILDTOOLS_URL" && \
     java -jar build.jar --rev latest && \
