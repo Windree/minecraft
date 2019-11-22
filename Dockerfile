@@ -1,16 +1,8 @@
 FROM ubuntu:18.10
 ARG DEBIAN_FRONTEND=noninteractive
-ARG BUILDTOOLS_URL="https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
-ARG BUILDTOOLS_GIT="https://hub.spigotmc.org/stash/scm/spigot/buildtools.git"
-ARG SPIGOT_GIT="https://hub.spigotmc.org/stash/scm/spigot/spigot.git"
+ARG PACKAGES="openjdk-11-jre-headless netcat-openbsd"
+ARG BUILD_PACKAGES="git wget curl"
 RUN apt update && \
-    apt install -y openjdk-11-jre-headless curl wget git lsof netcat-openbsd lsof && \
-    cd /tmp && \
-    curl -o build.jar "$BUILDTOOLS_URL" && \
-    java -jar build.jar --rev latest && \
-    mv spigot-*.jar / && \
-    apt purge -y git wget curl && \
-    apt autoremove --purge -y && \
-    cd / && \
-    rm -rf /tmp/* /var/lib/apt/lists/*
-ADD --chown=root:root @ /
+    apt install -y $PACKAGES $BUILD_PACKAGES && \
+    rm -rf /var/lib/apt/lists/*
+ADD @ /
