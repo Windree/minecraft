@@ -1,63 +1,48 @@
 #!/bin/bash
-set -eufo pipefail
+set -eo pipefail
 #https://gist.github.com/vivien/3b1c2efb80f3f3dde001
+USERNAME=$1
+CHAN=#$2
 
 SERVER=wings.keenetic.link
 PORT=6667
-USERNAME="$1"
-CHAN="#$2"
-INPUT=`mktemp -u --suffix .in`
-OUTPUT=`mktemp -u --suffix .OUT`
-connect_pid=
-ping_pid=
-mkfifo $INPUT
-mkfifo $OUTPUT
-	
-irc_ping(){
-	while read irc_ping_line; do
-		case $irc_ping_line in 
-			PING* ) 
-				echo "$irc_ping_line" | sed "s/PING/PONG/"
-			;;
-		esac
-	done
+INPUT=`mktemp --suffix .in`
+OUTPUT=`mktemp --suffix .out`
+IRC_CONNECTION_PID=
+
+irc_login(){
+        echo "USER $1 * * : $1"
+        echo "NICK $1"
 }
 
-login(){
-	echo "USER $1 * * : $1"
-	echo "NICK $1"
+irc_join(){
+        echo "JOIN $1"
 }
 
-join(){
-	echo "JOIN $1"
+irc_message(){
+        echo "PRIVMSG $1 : $2"
 }
 
-message(){
-	echo "PRIVMSG $1 : $2"
+irc_quit(){
+        echo "QUIT"
+
 }
 
-cleanup(){
-	rm -vf $INPUT $OUTPUT
-	test "$connect_pid" && kill -0 $connect_pid > /dev/null && kill -9 $connect_pid
-	test "$ping_pid"    && kill -0 $ping_pid > /dev/null    && kill -9 $ping_pid
-	test -e $INPUT && rm -f $INPUT
-	test -e $OUTPUT && rm -f $OUTPUT
-}
-
-trap cleanup exit
-USER_SEQ=0
-irc_ping <$OUTPUT >$INPUT &
-ping_pid=$!
-
+SEQ=0
 while read line; do
-	test "$connect_pid" && lsof -i :$PORT -sTCP:ESTABLISHED -a -p $connect_pid > /dev/null || {
-		test "$connect_pid" && kill -9 $connect_pid
-		((USER_SEQ+=1))
-		USER=$USERNAME$USER_SEQ
-		nc $SERVER $PORT <$INPUT >$OUTPUT &
-		connect_pid=$!
-		login $USER > $INPUT
-		join $CHAN > $INPUT
-	}
-	message  $CHAN "$line" > $INPUT
+	SEQ=$((SEQ+1))
+	USER=$USERNAME$SEQ
+	echo -n > $INPUT
+	echo -n > $OUTPUT
+	{
+			irc_login $USER
+			irc_join $CHAN
+			irc_message $CHAN "$line"
+			irc_quit
+
+	} | nc $SERVER $PORT &
+	IRC_CONNECTION_PID=$!;
+	wait
 done
+
+rm -f $INPUT $OUTPUT

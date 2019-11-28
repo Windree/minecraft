@@ -3,9 +3,10 @@ services:
   server:
     build: ./
     restart: always
-    command: ["bash", "-x", "./init.sh"]
+    command: ["./init.sh"]
     volumes:
-      - ../../data/minecraft/:/data/
+      - ../../data/minecraft/data:/data
+      - ../../data/minecraft/jar:/jar
     ports:
       - 25565:25565/tcp
       - 25565:25565/udp
