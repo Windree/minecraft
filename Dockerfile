@@ -1,6 +1,6 @@
-FROM ubuntu:18.10
+FROM ubuntu
 ARG DEBIAN_FRONTEND=noninteractive
-ARG PACKAGES="openjdk-11-jre-headless netcat-openbsd"
+ARG PACKAGES="openjdk-11-jre-headless"
 ARG BUILD_PACKAGES="git wget curl"
 RUN apt update && \
     apt install -y $PACKAGES $BUILD_PACKAGES && \
