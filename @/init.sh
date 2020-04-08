@@ -32,9 +32,9 @@ build(){
 	rm -rf /tmp/* 
 }
 
+build
 jar=$(get_server_path /jar)
 echo "Minecraft JAR: $jar"
-[ -z "$jar" ] && cd /tmp && build
 version=$(parse_version "$jar")
 cd /data
 set_config "eula.txt" "eula" "true";
