@@ -32,18 +32,25 @@ build(){
 	rm -rf /tmp/* 
 }
 
-build
 jar=$(get_server_path /jar)
+
+if [ -z "$jar" ]; then
+	build
+	jar=$(get_server_path /jar)
+fi
+
 echo "Minecraft JAR: $jar"
 version=$(parse_version "$jar")
 cd /data
 set_config "eula.txt" "eula" "true";
 set_config "server.properties" "motd" "$version";
 set_config "server.properties" "query.port" "$PORT";
-java -XX:+UseG1GC -Xms1G -Xmx1G -jar "$jar" nogui --noconsole 2>&1 &
-pid=$!
-sleep $((14*24*60*60))
-kill -15 $pid
-wait
-cd /tmp && build
-sleep 10
+java -XX:+UseG1GC -Xms1G -Xmx1G -jar "$jar" nogui --noconsole 2>&1
+
+# java -XX:+UseG1GC -Xms1G -Xmx1G -jar "$jar" nogui --noconsole 2>&1 &
+# pid=$!
+# sleep $((7*24*60*60))
+# kill -15 $pid
+# wait
+# build
+# sleep 10
