@@ -45,7 +45,7 @@ cd /data
 set_config "eula.txt" "eula" "true";
 set_config "server.properties" "motd" "$version";
 set_config "server.properties" "query.port" "$PORT";
-java -XX:+UseG1GC -Xms4G -Xmx4G -jar "$jar" nogui --noconsole 2>&1
+java -XX:+UseG1GC -Xms2G -Xmx2G -jar "$jar" nogui --noconsole 2>&1
 
 # java -XX:+UseG1GC -Xms1G -Xmx1G -jar "$jar" nogui --noconsole 2>&1 &
 # pid=$!
