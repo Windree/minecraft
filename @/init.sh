@@ -1,12 +1,16 @@
 #!/bin/bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
 PORT=25565
 TIMEOUT=14400
 BUILDTOOLS_URL="https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
 BUILDTOOLS_GIT="https://hub.spigotmc.org/stash/scm/spigot/buildtools.git"
 SPIGOT_GIT="https://hub.spigotmc.org/stash/scm/spigot/spigot.git"
 
-get_server_path(){
-	find "$1" -maxdepth 1 -type f -name spigot-*.jar | tail -n 1
+jar(){
+	find /jar -maxdepth 1 -type f -name spigot-*.jar | tail -n 1
 }
 
 set_config(){
@@ -32,11 +36,16 @@ build(){
 	rm -rf /tmp/* 
 }
 
-jar=$(get_server_path /jar)
-
+jar=$(jar)
 if [ -z "$jar" ]; then
 	build
-	jar=$(get_server_path /jar)
+	jar=$(jar)
+fi
+
+if [ ! -z $(find "$jar" -mtime +7) ]; then
+	rm -v "$jar"
+	build
+	jar=$(jar)
 fi
 
 echo "Minecraft JAR: $jar"
