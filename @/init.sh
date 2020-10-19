@@ -42,7 +42,7 @@ if [ -z "$jar" ]; then
 	jar=$(jar)
 fi
 
-if [ ! -z $(find "$jar" -mtime +7) ]; then
+if [ ! -z $(find "$jar" -mtime +30) ]; then
 	rm -v "$jar"
 	build
 	jar=$(jar)
