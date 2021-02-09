@@ -2,7 +2,7 @@ version: '3.3'
 services:
   server:
     build: ./
-    restart: always
+    restart: unless-stopped
     command: ["./init.sh"]
     volumes:
       - ../../data/minecraft/data:/data
