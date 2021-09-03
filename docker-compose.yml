@@ -1,12 +1,12 @@
 version: '3.3'
 services:
   server:
-    build: ./
-    restart: unless-stopped
+    build: ./image
+    restart: always
     command: ["./init.sh"]
     volumes:
-      - ../../data/minecraft/data:/data
-      - ../../data/minecraft/jar:/jar
+      - ./_/data:/data
+      - ./_/jar:/jar
     ports:
       - 25565:25565/tcp
       - 25565:25565/udp
