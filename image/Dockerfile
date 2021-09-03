@@ -5,4 +5,4 @@ ARG BUILD_PACKAGES="git wget curl"
 RUN apt update && \
     apt install -y $PACKAGES $BUILD_PACKAGES && \
     rm -rf /var/lib/apt/lists/*
-ADD @ /
+ADD _ /
