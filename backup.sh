@@ -18,7 +18,7 @@ function main(){
 }
 
 function get_path(){
-    dirname "$(realpath -s $0)"
+    dirname "$(realpath $0)"
 }
 
 main "$1"
