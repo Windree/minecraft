@@ -3,10 +3,8 @@ services:
   server:
     build: ./image
     restart: unless-stopped
-    command: ["./init.sh"]
     volumes:
-      - ./_/data:/data
-      - ./_/jar:/jar
+      - ./_:/data
     ports:
       - 25565:25565/tcp
       - 25565:25565/udp
