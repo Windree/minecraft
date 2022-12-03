@@ -1,4 +1,4 @@
-FROM ubuntu:21.04
+FROM ubuntu:22.04
 ARG DEBIAN_FRONTEND=noninteractive
 ARG PACKAGES="openjdk-17-jre-headless"
 ARG BUILD_PACKAGES="git wget curl"
