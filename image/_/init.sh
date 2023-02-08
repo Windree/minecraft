@@ -1,5 +1,5 @@
 #!/bin/bash
-set -Eeuxo pipefail
+set -Eeuo pipefail
 
 function main() {
 	local version=$(cat "/spigot.version")
