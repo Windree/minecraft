@@ -20,7 +20,7 @@ parse_version(){
 build(){
 	cd /tmp && \
 	curl -o build.jar "$BUILDTOOLS_URL" && \
-	java -jar build.jar --rev latest && \
+	java -jar build.jar --rev $MINECRAFT_VERSION && \
 	mkdir -p /jar && \
 	mv spigot-*.jar / && \
 	cd / && \
