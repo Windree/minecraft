@@ -2,22 +2,13 @@
 set -Eeuo pipefail
 
 function main() {
+    local backup_path=$1
     local root=$(get_path)
-    if ! docker-compose -f "$root/docker-compose.yml" stop >/dev/null 2>/dev/null; then
-        echo Error stopping container
-        return
-    fi
-    if ! duplicity --no-encryption "$root/_" "$1" 2>/dev/null; then
-        echo Backup error
-        return
-    fi
-    if ! docker-compose -f "$root/docker-compose.yml" up --build -d >/dev/null 2>/dev/null; then
-        echo Error restarting container
-        return
-    fi
-    if ! duplicity verify --no-encryption "$1" /dev/null; then
-        echo Verification error
-        exit 1
+    local last_backup=$(find "$backup_path" -type f  -exec stat -c '%X %n' {} \; | sort -n | tail -1 | awk '{ print $2 }')
+    if [ -z "$last_backup" ]; then
+        dar --create "$backup_path/full.dar" --fs-root "$root" --no-overwrite -zxz:1 -vt
+    else
+        dar --create "$backup_path/incremental-$(date +%F-%T)" --ref "${last_backup%.*.*}" --fs-root "$root" --no-overwrite -zxz:1 -vt
     fi
 }
 
