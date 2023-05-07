@@ -6,7 +6,7 @@ function main() {
 	set_config "eula.txt" "eula" "true"
 	set_config "server.properties" "motd" "$version"
 	# set_config "server.properties" "query.port" "$PORT"
-	java -XX:+UseG1GC -Xms2G -Xmx2G -jar "/spigot.jar" nogui --noconsole 2>&1
+	java -XX:+UseG1GC -Xms7G -Xmx7G -jar "/spigot.jar" nogui --noconsole 2>&1
 }
 
 set_config() {
