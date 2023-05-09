@@ -15,8 +15,8 @@ function main() {
         dar --create "$backup_path/incremental-$(date +%F-%T)" --ref "${last_backup%.*.*}" --fs-root "$root" -Q --no-overwrite --compress=zstd -vt
     fi
 
-    if ! docker-compose -f "$root/docker-compose.yml" up -d; then
-        echo error stopping container
+    if ! docker-compose -f "$root/docker-compose.yml" up --build -d; then
+        echo error staring container
         exit
     fi
 }
