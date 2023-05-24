@@ -10,14 +10,18 @@ function main() {
 
     local last_backup=$(find "$backup_path" -type f  -exec stat -c '%X %n' {} \; | sort -n | tail -1 | awk '{ print $2 }')
     if [ -z "$last_backup" ]; then
-        dar --create "$backup_path/full.dar" --fs-root "$root" -Q --no-overwrite --compress=zstd -vt
+        local name=$backup_path/full.dar
+        dar --create "$name" --fs-root "$root" -Q --no-overwrite --compress=zstd
+        echo "Full backup '$name' created."
     else
-        dar --create "$backup_path/incremental-$(date +%F-%T)" --ref "${last_backup%.*.*}" --fs-root "$root" -Q --no-overwrite --compress=zstd -vt
+        local name=$backup_path/incremental-$(date +%F-%T)
+        dar --create "$name" --ref "${last_backup%.*.*}" --fs-root "$root" -Q --no-overwrite --compress=zstd
+        echo "Incremental backup '$name' created."
     fi
 }
 
 up(){
-    if ! docker-compose -f "$root/docker-compose.yml" up --build -d; then
+    if ! docker-compose -f "$root/docker-compose.yml" up -d; then
         echo error starting container
         exit
     fi
