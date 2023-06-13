@@ -3,10 +3,11 @@ ARG MINECRAFT_VERSION=1.19.4
 ARG DEBIAN_FRONTEND=noninteractive
 ARG PACKAGES="openjdk-17-jre-headless"
 ARG BUILD_PACKAGES="git wget curl"
-ADD _ /
+ADD _/build.sh /
 RUN apt update && \
     apt install -y $PACKAGES $BUILD_PACKAGES && \
-    rm -rf /var/lib/apt/lists/* && \
     /build.sh && \
-    apt purge -y $BUILD_PACKAGES
+    apt purge -y $BUILD_PACKAGES && \
+    rm -rf /var/lib/apt/lists/*
+ADD _/init.sh /
 CMD ["/init.sh"]
