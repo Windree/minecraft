@@ -8,3 +8,11 @@ services:
     ports:
       - 25565:25565/tcp
       - 25565:25565/udp
+
+  upnp-client:
+    build: ./upnp-client/image
+    restart: unless-stopped
+    network_mode: "host"
+    environment:
+      - UPNP_INTERVAL=600
+      - UPNP_CONFIG=TCP 25565 25565;UDP 25565 25565

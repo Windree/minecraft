@@ -1,0 +1,3 @@
+[submodule "upnp-client"]
+	path = upnp-client
+	url = git@gitee.com:windree/upnp-client.git
