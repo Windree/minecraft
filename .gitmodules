@@ -1,0 +1,3 @@
+[submodule "docker-image-updater"]
+	path = docker-image-updater
+	url = git@github.com:Windree/docker-image-updater.git
