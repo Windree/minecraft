@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 function main() {
 	local version=$(cat "/spigot.version")
 	set_config "eula.txt" "eula" "true"
 	set_config "server.properties" "motd" "$version"
 	# set_config "server.properties" "query.port" "$PORT"
-	java -XX:+UseG1GC -Xms8G -Xmx8G -jar "/spigot.jar" nogui --noconsole 2>&1
+	java -XX:+UseG1GC -Xms6G -Xmx6G -jar "/spigot.jar" nogui --noconsole 2>&1
 }
 
 set_config() {
