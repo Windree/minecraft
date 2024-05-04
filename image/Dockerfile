@@ -10,5 +10,5 @@ RUN apt update && \
     apt purge -y $BUILD_PACKAGES && \
     apt autoremove --purge -y && \
     rm -rf /var/lib/apt/lists/*
-ADD _/init.sh /
-CMD ["/init.sh"]
+ADD _/ /
+CMD ["/entrypoint.sh"]
