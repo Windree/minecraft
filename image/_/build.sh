@@ -41,8 +41,8 @@ function parse_version() {
 }
 
 function cleanup() {
-	echo "Cleanup..."
-	rm -rf "$root"
+	echo -n "Cleanup... "
+	rm -rf "$root" | wc -l
 }
 
 trap cleanup exit
