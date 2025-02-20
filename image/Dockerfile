@@ -9,5 +9,5 @@ RUN apt update && \
     /build.sh && \
     apt autoremove --purge -y $BUILD_PACKAGES && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/*
-ADD _/ /
+ADD files /
 CMD ["/entrypoint.sh"]
