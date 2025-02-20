@@ -3,7 +3,7 @@ services:
     build: ./image
     restart: unless-stopped
     volumes:
-      - ./_:/data
+      - ./data:/data
     ports:
       - ${MINECRAFT_GAME_PORT}:25565/tcp
       - ${MINECRAFT_GAME_PORT}:25565/udp
