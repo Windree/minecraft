@@ -1,7 +1,7 @@
-FROM ubuntu:25.04
+FROM ubuntu:24.04
 ARG MINECRAFT_VERSION=1.21.7
 ARG DEBIAN_FRONTEND=noninteractive
-ARG PACKAGES="openjdk-24-jdk-headless"
+ARG PACKAGES="openjdk-21-jdk-headless"
 ARG BUILD_PACKAGES="git wget curl"
 ADD files/build.sh /
 RUN apt update && \
