@@ -7,3 +7,4 @@ services:
     ports:
       - ${MINECRAFT_GAME_PORT}:25565/tcp
       - ${MINECRAFT_GAME_PORT}:25565/udp
+      - ${MINECRAFT_DYNMAP_PORT}:8123/tcp
