@@ -1,0 +1,38 @@
+#!/usr/bin/env fish
+set -g fish_trace 1
+
+set -g server_root "/data/server"
+set -g spigot "spigot-*.jar"
+set -g spigot_link "/spigot.jar"
+set -g game_root "/data/minecraft"
+
+function main
+	set -l jar (find_jar "$server_root" "$spigot")
+	if [ -z "$jar" ]
+		echo "$server_root not fount in '$root'"
+		exit 1
+	end
+	set -l spigot_version (parse_version "$jar")
+	set_config "$game_root/eula.txt" "eula" "true"
+	set_config "$game_root/server.properties" "motd" "Minecraft spigot version $spigot_version"
+	# set_config "server.properties" "query.port" "$PORT"
+	rm -f "$spigot_link"
+	ln -s "$jar" "$spigot_link"
+end
+
+function set_config
+	set -l file "$argv[1]"
+	set -l parameter "$argv[2]"
+	set -l value "$argv[3]"
+	string replace -r -- "^($parameter=).*\$" '$1'"$value" < $file > $file.tmp; and mv {$file}.tmp {$file}
+end
+
+function find_jar
+	find "$argv[1]" -maxdepth 1 -type f -name "$argv[2]" | tail -n 1
+end
+
+function parse_version
+	echo "$argv[1]" | grep -oP '[\d.]+(?=\.)'
+end
+
+main
