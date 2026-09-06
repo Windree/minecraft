@@ -1,5 +1,5 @@
 #!/usr/bin/env fish
-set -g fish_trace 1
+# set -g fish_trace 1
 
 set -g server_root "/data/server"
 set -g spigot "spigot-*.jar"
